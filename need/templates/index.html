@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bright Minds Academy</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #fdfbfb, #ebedee);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #6c63ff;
+            color: white;
+            padding: 20px 40px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        #chat-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        #chatbox {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .msg {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+
+        .user {
+            background-color: #d1e7ff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot {
+            background-color: #e9f7ef;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+
+        #input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #6c63ff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #584de0;
+        }
+
+        footer {
+            margin: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bright Minds Academy ✨</h1>
+        <p>Your AI Tuition Assistant</p>
+    </header>
+
+    <div id="chat-container">
+        <div id="chatbox"></div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Ask about subjects, timing, fee...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Bright Minds Academy. Powered by Gemini AI.
+    </footer>
+
+    <script>
+        function addMessage(text, sender) {
+            const chatbox = document.getElementById('chatbox');
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('msg', sender);
+            msgDiv.textContent = text;
+            chatbox.appendChild(msgDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage("You: " + message, 'user');
+            input.value = '';
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message})
+            });
+
+            const data = await response.json();
+            addMessage("Bot: " + data.reply, 'bot');
+        }
+    </script>
+</body>
+</html>
